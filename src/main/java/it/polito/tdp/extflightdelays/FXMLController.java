@@ -1,10 +1,12 @@
 package it.polito.tdp.extflightdelays;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.extflightdelays.model.Model;
+import it.polito.tdp.extflightdelays.model.Stato;
 import it.polito.tdp.extflightdelays.model.Vicino;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -57,6 +59,27 @@ public class FXMLController {
 
     @FXML
     void doSimula(ActionEvent event) {
+    	this.txtResult.clear();
+    	String s = this.cmbBoxStati.getValue();
+    	if(s==null) {
+    		this.txtResult.setText("Scegli uno stato");
+    		return;
+    	}
+    	Integer T;
+    	Integer G;
+    	try {
+    		T = Integer.parseInt(this.txtT.getText());
+    		G = Integer.parseInt(this.txtG.getText());
+    		this.model.simula(s,T,G);
+    		Collection<Stato> stati = this.model.getStati();
+    		for(Stato st : stati) {
+    			this.txtResult.appendText(st.toString()+"\n");
+    		}
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Scegli uno stato");
+    		return;
+    	}
+    	
 
     }
 

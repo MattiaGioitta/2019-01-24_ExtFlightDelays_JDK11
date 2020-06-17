@@ -1,6 +1,7 @@
 package it.polito.tdp.extflightdelays.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Model {
 
 	private Graph<String,DefaultWeightedEdge> graph;
 	private ExtFlightDelaysDAO dao;
+	private Simulator sim;
 	
 	public Model() {
 		this.dao = new ExtFlightDelaysDAO();
@@ -63,6 +65,18 @@ public class Model {
 		}
 		Collections.sort(lista);
 		return lista;
+	}
+
+	public void simula(String s, int T, int G) {
+		// TODO Auto-generated method stub
+		this.sim = new Simulator();
+		this.sim.init(T, G, graph, s);
+		this.sim.run();
+	}
+
+	public Collection<Stato> getStati() {
+		// TODO Auto-generated method stub
+		return this.sim.getStati();
 	}
 
 }
