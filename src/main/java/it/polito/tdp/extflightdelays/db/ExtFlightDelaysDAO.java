@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import it.polito.tdp.extflightdelays.model.Adiacenza;
 import it.polito.tdp.extflightdelays.model.Airline;
 import it.polito.tdp.extflightdelays.model.Airport;
 import it.polito.tdp.extflightdelays.model.Flight;
@@ -114,5 +115,34 @@ public class ExtFlightDelaysDAO {
 			System.out.println("Errore connessione al database");
 			throw new RuntimeException("Error Connection Database");
 		}
+	}
+
+	public List<Adiacenza> getAdiacenze() {
+		final String sql ="SELECT a1.STATE AS s1,a2.STATE AS s2,COUNT(DISTINCT (f.TAIL_NUMBER)) AS peso " + 
+				"FROM airports AS a1,airports AS a2, " + 
+				"flights AS f " + 
+				"WHERE f.ORIGIN_AIRPORT_ID=a1.ID " + 
+				"AND f.DESTINATION_AIRPORT_ID=a2.ID " + 
+				"GROUP BY a1.STATE,a2.STATE";
+		List<Adiacenza> lista = new ArrayList<>();
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				Adiacenza a = new Adiacenza(rs.getString("s1"),rs.getString("s2"),rs.getInt("peso"));
+				lista.add(a);
+			}
+
+			conn.close();
+			return lista;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Errore connessione al database");
+			throw new RuntimeException("Error Connection Database");
+		}
+		
 	}
 }
